@@ -12,13 +12,13 @@ const NAV_LINKS = [
   { id: "contacts", label: "Контакты" },
 ];
 
-const PLAN_IMAGE = "https://cdn.poehali.dev/projects/cd711bd3-47d4-454e-9ef0-51697f57ca6f/bucket/99c301db-bffe-497f-b6ac-cf8e09b72015.PNG";
 
 const PLAN_TYPES = [
   {
     id: "type1",
     name: "Тип 1",
     label: "1-комнатная · с гардеробом",
+    image: "https://cdn.poehali.dev/projects/cd711bd3-47d4-454e-9ef0-51697f57ca6f/bucket/f9272560-1d56-45e3-9fbb-7cb340306bba.png",
     totalArea: 41.05,
     rooms: [
       { name: "Кухня-столовая", area: 20.45 },
@@ -33,6 +33,7 @@ const PLAN_TYPES = [
     id: "type2",
     name: "Тип 2",
     label: "1-комнатная · с балконом",
+    image: "https://cdn.poehali.dev/projects/cd711bd3-47d4-454e-9ef0-51697f57ca6f/bucket/8f0c6242-2543-40c6-ac87-e2013caf8451.png",
     totalArea: 46.25,
     rooms: [
       { name: "Кухня-столовая", area: 20.0 },
@@ -311,13 +312,10 @@ export default function Index() {
                 >
                   <div className="relative bg-white/5 overflow-hidden">
                     <img
-                      src={PLAN_IMAGE}
+                      src={plan.image}
                       alt={plan.name}
-                      className="w-full h-56 object-cover"
-                      style={{
-                        objectPosition: plan.id === "type1" ? "0% center" : "50% center",
-                        objectFit: "cover",
-                      }}
+                      className="w-full object-contain bg-white"
+                      style={{ maxHeight: "420px" }}
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-obsidian/80 to-transparent" />
                     <div className="absolute bottom-4 left-4">
