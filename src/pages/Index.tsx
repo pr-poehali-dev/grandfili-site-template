@@ -12,15 +12,48 @@ const NAV_LINKS = [
   { id: "contacts", label: "Контакты" },
 ];
 
+const PLAN_IMAGE = "https://cdn.poehali.dev/projects/cd711bd3-47d4-454e-9ef0-51697f57ca6f/bucket/99c301db-bffe-497f-b6ac-cf8e09b72015.PNG";
+
+const PLAN_TYPES = [
+  {
+    id: "type1",
+    name: "Тип 1",
+    label: "1-комнатная · с гардеробом",
+    totalArea: 41.05,
+    rooms: [
+      { name: "Кухня-столовая", area: 20.45 },
+      { name: "Жилая комната", area: 10.5 },
+      { name: "Санузел", area: 3.65 },
+      { name: "Гардероб", area: 1.35 },
+      { name: "Коридор", area: 5.6 },
+    ],
+    features: ["Гардеробная комната", "Просторная кухня-столовая", "Раздельный санузел"],
+  },
+  {
+    id: "type2",
+    name: "Тип 2",
+    label: "1-комнатная · с балконом",
+    totalArea: 46.25,
+    rooms: [
+      { name: "Кухня-столовая", area: 20.0 },
+      { name: "Жилая комната", area: 10.5 },
+      { name: "Санузел", area: 3.65 },
+      { name: "Коридор", area: 5.6 },
+      { name: "Балкон", area: 6.0 },
+    ],
+    features: ["Балкон 6 м² с панорамным видом", "Просторная кухня-столовая", "Раздельный санузел"],
+  },
+];
+
 const APARTMENTS = [
-  { id: 1, type: "Студия", rooms: 0, area: 28, floor: 4, price: 4200000, status: "available", view: "Двор" },
-  { id: 2, type: "1-комнатная", rooms: 1, area: 42, floor: 7, price: 6800000, status: "available", view: "Парк" },
-  { id: 3, type: "1-комнатная", rooms: 1, area: 47, floor: 12, price: 7500000, status: "sold", view: "Город" },
-  { id: 4, type: "2-комнатная", rooms: 2, area: 64, floor: 9, price: 9200000, status: "available", view: "Город" },
-  { id: 5, type: "2-комнатная", rooms: 2, area: 72, floor: 15, price: 11500000, status: "available", view: "Панорама" },
-  { id: 6, type: "3-комнатная", rooms: 3, area: 94, floor: 18, price: 16800000, status: "reserved", view: "Панорама" },
-  { id: 7, type: "3-комнатная", rooms: 3, area: 108, floor: 20, price: 19200000, status: "available", view: "Панорама" },
-  { id: 8, type: "Пентхаус", rooms: 4, area: 180, floor: 22, price: 38000000, status: "available", view: "360°" },
+  { id: 1, type: "1-комнатная", planType: "Тип 1", rooms: 1, area: 41.05, floor: 3, price: 6200000, status: "available", view: "Двор" },
+  { id: 2, type: "1-комнатная", planType: "Тип 2", rooms: 1, area: 46.25, floor: 5, price: 7100000, status: "available", view: "Парк" },
+  { id: 3, type: "1-комнатная", planType: "Тип 1", rooms: 1, area: 41.05, floor: 8, price: 6500000, status: "sold", view: "Город" },
+  { id: 4, type: "1-комнатная", planType: "Тип 2", rooms: 1, area: 46.25, floor: 10, price: 7400000, status: "available", view: "Город" },
+  { id: 5, type: "1-комнатная", planType: "Тип 1", rooms: 1, area: 41.05, floor: 13, price: 6800000, status: "available", view: "Панорама" },
+  { id: 6, type: "1-комнатная", planType: "Тип 2", rooms: 1, area: 46.25, floor: 15, price: 7800000, status: "reserved", view: "Панорама" },
+  { id: 7, type: "1-комнатная", planType: "Тип 1", rooms: 1, area: 41.05, floor: 18, price: 7100000, status: "available", view: "Панорама" },
+  { id: 8, type: "1-комнатная", planType: "Тип 2", rooms: 1, area: 46.25, floor: 20, price: 8200000, status: "available", view: "360°" },
 ];
 
 const INFRA = [
@@ -54,8 +87,8 @@ export default function Index() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [filterType, setFilterType] = useState("Все");
-  const [filterPrice, setFilterPrice] = useState([0, 40000000]);
-  const [filterArea, setFilterArea] = useState([0, 200]);
+  const [filterPrice, setFilterPrice] = useState([0, 8500000]);
+  const [filterArea, setFilterArea] = useState([0, 50]);
   const [selectedApt, setSelectedApt] = useState<number | null>(null);
   const heroRef = useRef<HTMLDivElement>(null);
 
@@ -75,10 +108,10 @@ export default function Index() {
     setMenuOpen(false);
   };
 
-  const types = ["Все", "Студия", "1-комнатная", "2-комнатная", "3-комнатная", "Пентхаус"];
+  const types = ["Все", "Тип 1", "Тип 2"];
 
   const filtered = APARTMENTS.filter((a) => {
-    const typeOk = filterType === "Все" || a.type === filterType;
+    const typeOk = filterType === "Все" || a.planType === filterType;
     const priceOk = a.price >= filterPrice[0] && a.price <= filterPrice[1];
     const areaOk = a.area >= filterArea[0] && a.area <= filterArea[1];
     return typeOk && priceOk && areaOk;
@@ -264,10 +297,69 @@ export default function Index() {
             </div>
           </div>
 
+          {/* Plan types visual */}
+          <div className="mb-12">
+            <div className="text-white/40 text-xs tracking-widest uppercase mb-6">Типы планировок</div>
+            <div className="grid md:grid-cols-2 gap-6">
+              {PLAN_TYPES.map((plan) => (
+                <div
+                  key={plan.id}
+                  onClick={() => setFilterType(plan.name)}
+                  className={`border cursor-pointer transition-all duration-300 overflow-hidden ${
+                    filterType === plan.name ? "border-gold" : "border-white/10 hover:border-gold/30"
+                  }`}
+                >
+                  <div className="relative bg-white/5 overflow-hidden">
+                    <img
+                      src={PLAN_IMAGE}
+                      alt={plan.name}
+                      className="w-full h-56 object-cover"
+                      style={{
+                        objectPosition: plan.id === "type1" ? "0% center" : "50% center",
+                        objectFit: "cover",
+                      }}
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-obsidian/80 to-transparent" />
+                    <div className="absolute bottom-4 left-4">
+                      <div className="font-display text-2xl text-white">{plan.name}</div>
+                      <div className="text-gold/80 text-xs tracking-wider mt-0.5">{plan.label}</div>
+                    </div>
+                    {filterType === plan.name && (
+                      <div className="absolute top-3 right-3 bg-gold text-obsidian text-xs font-semibold px-2.5 py-1">
+                        Выбран
+                      </div>
+                    )}
+                  </div>
+                  <div className="p-5">
+                    <div className="grid grid-cols-2 gap-x-6 gap-y-2 mb-4">
+                      {plan.rooms.map((r) => (
+                        <div key={r.name} className="flex justify-between items-center text-sm border-b border-white/5 pb-1.5">
+                          <span className="text-white/50">{r.name}</span>
+                          <span className="text-white font-medium">{r.area} м²</span>
+                        </div>
+                      ))}
+                      <div className="flex justify-between items-center text-sm col-span-2 pt-1">
+                        <span className="text-white/60 font-medium">Итого</span>
+                        <span className="text-gold font-display text-lg">{plan.totalArea} м²</span>
+                      </div>
+                    </div>
+                    <div className="flex flex-wrap gap-2">
+                      {plan.features.map((f) => (
+                        <span key={f} className="text-xs text-white/40 border border-white/10 px-2.5 py-1">
+                          {f}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+
           {/* Filters */}
           <div className="bg-obsidian border border-white/5 p-6 mb-10 space-y-6">
             <div>
-              <div className="text-white/40 text-xs tracking-widest uppercase mb-3">Тип квартиры</div>
+              <div className="text-white/40 text-xs tracking-widest uppercase mb-3">Планировка</div>
               <div className="flex flex-wrap gap-2">
                 {types.map((t) => (
                   <button
@@ -292,9 +384,9 @@ export default function Index() {
                 </div>
                 <input
                   type="range"
-                  min={4000000}
-                  max={40000000}
-                  step={500000}
+                  min={6000000}
+                  max={8500000}
+                  step={100000}
                   value={filterPrice[1]}
                   onChange={(e) => setFilterPrice([0, +e.target.value])}
                   className="w-full accent-gold"
@@ -307,9 +399,9 @@ export default function Index() {
                 </div>
                 <input
                   type="range"
-                  min={20}
-                  max={200}
-                  step={5}
+                  min={40}
+                  max={50}
+                  step={1}
                   value={filterArea[1]}
                   onChange={(e) => setFilterArea([0, +e.target.value])}
                   className="w-full accent-gold"
@@ -333,7 +425,7 @@ export default function Index() {
                 <div className="p-6">
                   <div className="flex justify-between items-start mb-4">
                     <div>
-                      <div className="font-display text-2xl font-light">{apt.type}</div>
+                      <div className="font-display text-2xl font-light">{apt.planType}</div>
                       <div className="text-white/40 text-sm mt-0.5">{apt.area} м² · {apt.floor} этаж</div>
                     </div>
                     <span className={`text-xs px-2.5 py-1 rounded-full ${statusLabel[apt.status].color}`}>
